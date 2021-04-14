@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	main()
+int	main(int argc, char *argv[], char *envp[])
 {
 	char	str[100];				// буфер для разных символов (1 - анг, 2 - рус, 3 - стрелочки)
 	int		len;
@@ -10,11 +10,11 @@ int	main()
 	term.c_lflag &= ~ECHO;			// отключаем вывод служебных символов
 	term.c_lflag &= ~ICANON;		// переходим в неканонический посимвольный режим ввода
 	tcsetattr(0, TCSANOW, &term);	// применяем настройки
-	tgetent(0, "xterm-256color");	// загружаем базу данных текущего терминала
+	tgetent(0, getenv("TERM"));		// загружаем базу данных текущего терминала
 
 	tputs(save_cursor, 1, &ft_putchar);
 	str[0] = '0';
-	while (ft_strcmp(str, "\n"))
+	while (1)
 	{
 		len = read(0, str, 100);
 		if (!ft_strncmp(str, "\e[A", len))
@@ -42,5 +42,9 @@ int	main()
 			write(1, str, len);
 	}
 
+	// Восстанавливаем настройки при выходе
+	term.c_lflag |= ECHO;
+	term.c_lflag |= ICANON;
+	tcsetattr(0, TCSANOW, &term);
 	return(0);
 }

@@ -20,7 +20,7 @@ LIBFT		= $(LIBFT_DIR)libft.a
 all:		tools $(NAME)
 
 $(NAME):	$(LIBFT) $(HEADER) $(OBJS)
-			$(CC) $(CFLAGS) $(LIBFT) -ltermcap $(OBJS) -o $(NAME)
+			$(CC) $(CFLAGS) -ltermcap $(LIBFT) $(OBJS) -o $(NAME)
 			@echo $(NAME) created!
 
 tools:

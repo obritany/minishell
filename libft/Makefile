@@ -55,9 +55,11 @@ SRCS	=\
 		ft_toupper.c\
 		ft_strtoupper.c\
 		ft_strtolower.c\
-		ft_clear.c\
+		ft_arrclear.c\
 		get_next_line.c\
-		ft_realloc.c
+		ft_realloc.c\
+		ft_arrdup.c\
+		ft_putarr.c
 SRCS_B	=\
 		ft_lstadd_back.c\
 		ft_lstadd_front.c\

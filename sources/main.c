@@ -1,41 +1,5 @@
 #include "minishell.h"
 
-int copy_array(char **dst[], char **src[])
-{
-	int		i;
-
-	if (!(*src))
-		return (1);
-	i = 0;
-	while ((*src)[i])
-		i++;
-	*dst = malloc(sizeof(char*) * (i + 1));
-	i = 0;
-	while ((*src)[i])
-	{
-		(*dst)[i] = ft_strdup((*src)[i]);
-		i++;
-	}
-	(*dst)[i] = 0;
-	return (0);
-}
-
-int	print_array(char **array[])
-{
-	int	i;
-
-	if (!(*array))
-		return (1);
-	i = 0;
-	while ((*array)[i])
-	{
-		ft_putstr_fd((*array)[i], 1);
-		ft_putstr_fd("\n", 1);
-		i++;
-	}
-	return (0);
-}
-
 int	set_key_val(char **array[], char *str)
 {
 	int		i;
@@ -54,10 +18,10 @@ int	set_key_val(char **array[], char *str)
 			free((*array)[i]);
 			(*array)[i] = ft_strdup(str);
 		}
-		ft_clear(temp_key_val);
+		ft_arrclear(temp_key_val);
 		i++;
 	}
-	ft_clear(key_val);
+	ft_arrclear(key_val);
 	return (0);
 }
 
@@ -68,10 +32,10 @@ int	main(int argc, char *argv[], char *envp[])
 	struct	termios term;
 	char	**env;
 
-	copy_array(&env, &envp);
-	print_array(&env);
+	env = ft_arrdup(envp);
+	ft_putarr(env);
 	set_key_val(&env, "abc=iop");
-	print_array(&env);
+	ft_putarr(env);
 
 	tcgetattr(0,&term);
 	term.c_lflag &= ~ECHO;			// отключаем вывод служебных символов

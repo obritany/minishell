@@ -12,15 +12,15 @@
 
 #include "libft.h"
 
-char	**ft_clear(char **tab)
+int	ft_arrclear(char **arr)
 {
 	unsigned int	i;
 
-	if (!tab)
+	if (!arr)
 		return (0);
 	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 	return (0);
 }

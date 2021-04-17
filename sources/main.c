@@ -6,23 +6,70 @@ typedef struct s_var
 	char	*value;
 }				t_var;
 
-void	print_content(void *content)
+void	print_env(t_list *env)
 {
-	ft_putstr_fd(((t_var*)content)->key, 1);
-	ft_putstr_fd("=", 1);
-	ft_putstr_fd(((t_var*)content)->value, 1);
-	ft_putstr_fd("\n", 1);
+	while (env)
+	{
+		ft_putstr_fd(((t_var*)(env->content))->key, 1);
+		ft_putstr_fd("=", 1);
+		ft_putstr_fd(((t_var*)(env->content))->value, 1);
+		ft_putstr_fd("\n", 1);
+		env = env->next;
+	}
 }
 
-int 	add_env(t_list **begin, char *str)
+int 	add_var(t_list **begin, char *str, int n)
 {
-	ft_lstadd_back(begin, ft_lstnew(malloc(sizeof(t_var))));
-	last = ft_lstlast(begin);
-	middle = ft_strchr(envp[i], '=');
-	*middle = '\0';
-	((t_var*)(last->content))->key = ft_strdup(envp[i]);
-	((t_var*)(last->content))->value = ft_strdup(middle + 1);
-	*middle = '=';
+	t_list	*temp;
+	char	**key_val;
+
+	key_val = ft_split(str, '=');
+	temp = *begin;
+	while (temp)
+	{
+		if (!ft_strcmp(((t_var*)temp->content)->key, key_val[0]))
+		{
+			free(((t_var*)(temp->content))->key);
+			free(((t_var*)(temp->content))->value);
+			((t_var*)(temp->content))->key = key_val[0];
+			((t_var*)(temp->content))->value = key_val[1];
+			free(key_val);
+			return (0);
+		}
+		temp = temp->next;
+	}
+	temp = ft_lstnew(malloc(sizeof(t_var)));
+	((t_var*)(temp->content))->key = key_val[0];
+	((t_var*)(temp->content))->value = key_val[1];
+	ft_lstadd_at(begin, temp, n);
+	free(key_val);
+	return (0);
+}
+
+int		del_var(t_list **begin, char *str)
+{
+	t_list	*temp;
+	t_list	*prev;
+
+	prev = 0;
+	temp = *begin;
+	while (temp)
+	{
+		if (!ft_strcmp(((t_var*)temp->content)->key, str))
+		{
+			if (prev)
+				prev->next = temp->next;
+			else
+				*begin = temp->next;
+			free(((t_var*)(temp->content))->key);
+			free(((t_var*)(temp->content))->value);
+			free(temp->content);
+			free(temp);
+			return (0);
+		}
+		prev = temp;
+		temp = temp->next;
+	}
 	return (0);
 }
 
@@ -30,8 +77,6 @@ t_list	*envp_to_lst(char *envp[])
 {
 	int		i;
 	t_list	*begin;
-	t_list	*last;
-	char	*middle;
 
 	if (!envp)
 		return (0);
@@ -39,7 +84,7 @@ t_list	*envp_to_lst(char *envp[])
 	begin = 0;
 	while (envp[i])
 	{
-		add_env(&begin, envp[i]);
+		add_var(&begin, envp[i], ft_lstsize(begin));
 		i++;
 	}
 	return (begin);
@@ -53,7 +98,29 @@ int		main(int argc, char *argv[], char *envp[])
 	t_list	*env;
 
 	env = envp_to_lst(envp);
-	ft_lstiter(env, print_content);
+
+	print_env(env);
+	printf("\n");
+
+	add_var(&env, "a=a", ft_lstsize(env) - 1);
+	print_env(env);
+	printf("\n");
+
+	add_var(&env, "b=b", ft_lstsize(env) - 1);
+	print_env(env);
+	printf("\n");
+
+	add_var(&env, "c=c", ft_lstsize(env) - 1);
+	print_env(env);
+	printf("\n");
+
+	add_var(&env, "b=bbb", ft_lstsize(env) - 1);
+	print_env(env);
+	printf("\n");
+
+	del_var(&env, "b");
+	print_env(env);
+	printf("\n");
 
 	tcgetattr(0,&term);
 	term.c_lflag &= ~ECHO;			// отключаем вывод служебных символов

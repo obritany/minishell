@@ -59,8 +59,7 @@ SRCS	=\
 		get_next_line.c\
 		ft_realloc.c\
 		ft_arrdup.c\
-		ft_putarr.c
-SRCS_B	=\
+		ft_putarr.c\
 		ft_lstadd_back.c\
 		ft_lstadd_front.c\
 		ft_lstclear.c\
@@ -72,7 +71,6 @@ SRCS_B	=\
 		ft_lstsize.c
 
 OBJS	= $(SRCS:.c=.o)
-OBJS_B	= $(SRCS_B:.c=.o)
 
 all:		$(NAME)
 
@@ -81,7 +79,7 @@ $(NAME):	$(OBJS)
 			@echo $(NAME) created!
 
 clean:
-			@$(RM) $(OBJS) $(OBJS_B)
+			@$(RM) $(OBJS)
 			@echo $(NAME) cleaned!
 
 fclean:		clean
@@ -90,8 +88,4 @@ fclean:		clean
 
 re:			fclean all
 
-bonus:		$(OBJS) $(OBJS_B)
-			@ar rcs $(NAME) $(OBJS) $(OBJS_B)
-			@echo $(NAME) created!
-
-.PHONY:   all clean fclean re bonus
+.PHONY:   all clean fclean re

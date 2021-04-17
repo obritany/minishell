@@ -1,41 +1,59 @@
 #include "minishell.h"
 
-int	set_key_val(char **array[], char *str)
+typedef struct s_var
 {
-	int		i;
-	char 	**key_val;
-	char 	**temp_key_val;
+	char	*key;
+	char	*value;
+}				t_var;
 
-	if (!(*array))
-		return (1);
-	key_val = ft_split(str, '=');
-	i = 0;
-	while ((*array)[i])
-	{
-		temp_key_val = ft_split((*array)[i], '=');
-		if (!ft_strcmp(temp_key_val[0], key_val[0]))
-		{
-			free((*array)[i]);
-			(*array)[i] = ft_strdup(str);
-		}
-		ft_arrclear(temp_key_val);
-		i++;
-	}
-	ft_arrclear(key_val);
+void	print_content(void *content)
+{
+	ft_putstr_fd(((t_var*)content)->key, 1);
+	ft_putstr_fd("=", 1);
+	ft_putstr_fd(((t_var*)content)->value, 1);
+	ft_putstr_fd("\n", 1);
+}
+
+int 	add_env(t_list **begin, char *str)
+{
+	ft_lstadd_back(begin, ft_lstnew(malloc(sizeof(t_var))));
+	last = ft_lstlast(begin);
+	middle = ft_strchr(envp[i], '=');
+	*middle = '\0';
+	((t_var*)(last->content))->key = ft_strdup(envp[i]);
+	((t_var*)(last->content))->value = ft_strdup(middle + 1);
+	*middle = '=';
 	return (0);
 }
 
-int	main(int argc, char *argv[], char *envp[])
+t_list	*envp_to_lst(char *envp[])
+{
+	int		i;
+	t_list	*begin;
+	t_list	*last;
+	char	*middle;
+
+	if (!envp)
+		return (0);
+	i = 0;
+	begin = 0;
+	while (envp[i])
+	{
+		add_env(&begin, envp[i]);
+		i++;
+	}
+	return (begin);
+}
+
+int		main(int argc, char *argv[], char *envp[])
 {
 	char	str[100];				// буфер для разных символов (1 - анг, 2 - рус, 3 - стрелочки)
 	int		len;
 	struct	termios term;
-	char	**env;
+	t_list	*env;
 
-	env = ft_arrdup(envp);
-	ft_putarr(env);
-	set_key_val(&env, "abc=iop");
-	ft_putarr(env);
+	env = envp_to_lst(envp);
+	ft_lstiter(env, print_content);
 
 	tcgetattr(0,&term);
 	term.c_lflag &= ~ECHO;			// отключаем вывод служебных символов

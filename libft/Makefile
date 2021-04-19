@@ -15,6 +15,8 @@ CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror
 RM		= rm -f
 
+HEADER	= libft.h
+
 SRCS	=\
 		ft_atoi.c\
 		ft_bzero.c\
@@ -79,6 +81,8 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 			@ar rcs $(NAME) $(OBJS)
 			@echo $(NAME) created!
+
+$(OBJS):	$(HEADER)
 
 clean:
 			@$(RM) $(OBJS)

@@ -2,12 +2,13 @@
 NAME		= minishell
 CC			= gcc
 # CFLAGS		= -Wall -Wextra -Werror
-# CFLAGS		=	-fsanitize=address
+# CFLAGS		= -fsanitize=address
 CFLAGS		=
 RM			= rm -f
 
 #FILES
-FLS			= main.c
+FLS			= main.c\
+			env.c
 
 SRCS_DIR	= sources/
 HEADER		= $(SRCS_DIR)minishell.h
@@ -20,9 +21,11 @@ LIBFT		= $(LIBFT_DIR)libft.a
 #COMMANDS
 all:		tools $(NAME)
 
-$(NAME):	$(LIBFT) $(HEADER) $(OBJS)
+$(NAME):	$(LIBFT) $(OBJS)
 			$(CC) $(CFLAGS) -ltermcap $(LIBFT) $(OBJS) -o $(NAME)
 			@echo $(NAME) created!
+
+$(OBJS):	$(HEADER)
 
 tools:
 			$(MAKE) -C $(LIBFT_DIR)

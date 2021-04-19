@@ -1,93 +1,36 @@
 #include "minishell.h"
 
-typedef struct s_var
+void	test_env(t_list *env)
 {
-	char	*key;
-	char	*value;
-}				t_var;
+	print_env(env, 0);
+	printf("\n");
 
-void	print_env(t_list *env)
-{
-	while (env)
-	{
-		ft_putstr_fd(((t_var*)(env->content))->key, 1);
-		ft_putstr_fd("=", 1);
-		ft_putstr_fd(((t_var*)(env->content))->value, 1);
-		ft_putstr_fd("\n", 1);
-		env = env->next;
-	}
-}
+	set_var(&env, "a=a a a", ft_lstsize(env) - 1);
+	print_env(env, 0);
+	printf("\n");
 
-int 	add_var(t_list **begin, char *str, int n)
-{
-	t_list	*temp;
-	char	**key_val;
+	set_var(&env, "b=bbb", ft_lstsize(env) - 1);
+	print_env(env, 0);
+	printf("\n");
 
-	key_val = ft_split(str, '=');
-	temp = *begin;
-	while (temp)
-	{
-		if (!ft_strcmp(((t_var*)temp->content)->key, key_val[0]))
-		{
-			free(((t_var*)(temp->content))->key);
-			free(((t_var*)(temp->content))->value);
-			((t_var*)(temp->content))->key = key_val[0];
-			((t_var*)(temp->content))->value = key_val[1];
-			free(key_val);
-			return (0);
-		}
-		temp = temp->next;
-	}
-	temp = ft_lstnew(malloc(sizeof(t_var)));
-	((t_var*)(temp->content))->key = key_val[0];
-	((t_var*)(temp->content))->value = key_val[1];
-	ft_lstadd_at(begin, temp, n);
-	free(key_val);
-	return (0);
-}
+	set_var(&env, "c=", ft_lstsize(env) - 1);
+	print_env(env, 0);
+	printf("\n");
 
-int		del_var(t_list **begin, char *str)
-{
-	t_list	*temp;
-	t_list	*prev;
+	set_var(&env, "b=b", ft_lstsize(env) - 1);
+	print_env(env, 0);
+	printf("\n");
+	
+	unset_var(&env, "b");
+	print_env(env, 0);
+	printf("\n");
 
-	prev = 0;
-	temp = *begin;
-	while (temp)
-	{
-		if (!ft_strcmp(((t_var*)temp->content)->key, str))
-		{
-			if (prev)
-				prev->next = temp->next;
-			else
-				*begin = temp->next;
-			free(((t_var*)(temp->content))->key);
-			free(((t_var*)(temp->content))->value);
-			free(temp->content);
-			free(temp);
-			return (0);
-		}
-		prev = temp;
-		temp = temp->next;
-	}
-	return (0);
-}
+	printf("%s\n", get_var(env, "a"));
+	printf("%s\n", get_var(env, "b"));
+	printf("%s\n", get_var(env, "c"));
+	printf("\n");
 
-t_list	*envp_to_lst(char *envp[])
-{
-	int		i;
-	t_list	*begin;
-
-	if (!envp)
-		return (0);
-	i = 0;
-	begin = 0;
-	while (envp[i])
-	{
-		add_var(&begin, envp[i], ft_lstsize(begin));
-		i++;
-	}
-	return (begin);
+	print_env(env, 1);
 }
 
 int		main(int argc, char *argv[], char *envp[])
@@ -98,29 +41,7 @@ int		main(int argc, char *argv[], char *envp[])
 	t_list	*env;
 
 	env = envp_to_lst(envp);
-
-	print_env(env);
-	printf("\n");
-
-	add_var(&env, "a=a", ft_lstsize(env) - 1);
-	print_env(env);
-	printf("\n");
-
-	add_var(&env, "b=b", ft_lstsize(env) - 1);
-	print_env(env);
-	printf("\n");
-
-	add_var(&env, "c=c", ft_lstsize(env) - 1);
-	print_env(env);
-	printf("\n");
-
-	add_var(&env, "b=bbb", ft_lstsize(env) - 1);
-	print_env(env);
-	printf("\n");
-
-	del_var(&env, "b");
-	print_env(env);
-	printf("\n");
+	// test_env(env);
 
 	tcgetattr(0,&term);
 	term.c_lflag &= ~ECHO;			// отключаем вывод служебных символов

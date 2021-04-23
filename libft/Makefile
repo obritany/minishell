@@ -72,7 +72,8 @@ SRCS	=\
 		ft_lstnew.c\
 		ft_lstsize.c\
 		ft_lstadd_at.c\
-		ft_lst_at.c
+		ft_lst_at.c\
+		ft_arradd.c
 
 OBJS	= $(SRCS:.c=.o)
 

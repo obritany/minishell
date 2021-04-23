@@ -8,7 +8,9 @@ RM			= rm -f
 
 #FILES
 FLS			= main.c\
-			env.c
+			env.c\
+			history.c\
+			test.c
 
 SRCS_DIR	= sources/
 HEADER		= $(SRCS_DIR)minishell.h

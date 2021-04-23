@@ -87,5 +87,6 @@ int				get_next_line(int fd, char **line);
 int				ft_putarr(char **arr);
 int				ft_arrclear(char **arr);
 char			**ft_arrdup(char **arr);
+int				ft_arradd(char ***arr, char *str);
 
 #endif

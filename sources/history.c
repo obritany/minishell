@@ -38,5 +38,7 @@ int		add_hist(t_hist *hist, char *str)
 		return (1);
 	hist->size++;
 	hist->pos++;
+	write_str("minishell_history", str, O_APPEND);
+	write_str("minishell_history", "\n", O_APPEND);
 	return (0);
 }

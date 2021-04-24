@@ -73,7 +73,8 @@ SRCS	=\
 		ft_lstsize.c\
 		ft_lstadd_at.c\
 		ft_lst_at.c\
-		ft_arradd.c
+		ft_arradd.c\
+		ft_arrsort.c
 
 OBJS	= $(SRCS:.c=.o)
 

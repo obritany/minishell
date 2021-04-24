@@ -22,7 +22,8 @@ typedef struct s_hist
 }				t_hist;
 
 t_list	*envp_to_lst(char *envp[]);
-void	print_env(t_list *env, int mode);
+void	print_env(t_list *env);
+void	print_export(t_list *env);
 char	*get_var(t_list *env, char *str);
 int 	set_var(t_list **begin, char *str, int n);
 int		unset_var(t_list **begin, char *str);

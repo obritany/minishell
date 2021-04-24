@@ -9,6 +9,8 @@ int		main(int argc, char *argv[], char *envp[])
 	t_hist	hist;
 
 	env = envp_to_lst(envp);
+	print_export(env);
+	
 	hist.size = read_file("minishell_history", &(hist.cmds));
 	hist.pos = hist.size;
 
@@ -45,10 +47,10 @@ int		main(int argc, char *argv[], char *envp[])
 		}
 		else if (!ft_strncmp(str, "\4", len))		// ctrl+d
 		{
-			add_hist(&hist, "command_5");
-			add_hist(&hist, "command_6");
-			add_hist(&hist, "command_7");
-			// break ;
+			// add_hist(&hist, "command_5");
+			// add_hist(&hist, "command_6");
+			// add_hist(&hist, "command_7");
+			break ;
 		}
 		else
 		{

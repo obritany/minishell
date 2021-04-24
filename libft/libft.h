@@ -88,5 +88,6 @@ int				ft_putarr(char **arr);
 int				ft_arrclear(char **arr);
 char			**ft_arrdup(char **arr);
 int				ft_arradd(char ***arr, char *str);
+int				ft_arrsort(char ***arr);
 
 #endif

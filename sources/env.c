@@ -1,26 +1,35 @@
 #include "minishell.h"
 
-void	print_env(t_list *env, int mode)		// mode_0 - env, mode_1 - export
+void	print_env(t_list *env)
 {
 	while (env)
 	{
-		if (mode == 1 && !ft_strcmp(((t_var*)env->content)->key, "_"))
-		{
-			env = env->next;
-			continue ;
-		}
-		if (mode == 1)
-			ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(((t_var*)(env->content))->key, 1);
 		ft_putstr_fd("=", 1);
-		if (mode == 1)
-			ft_putstr_fd("\"", 1);
 		ft_putstr_fd(((t_var*)(env->content))->value, 1);
-		if (mode == 1)
-			ft_putstr_fd("\"", 1);
 		ft_putstr_fd("\n", 1);
 		env = env->next;
 	}
+}
+
+void	print_export(t_list *env)
+{
+	char	**envp;
+	char	*line;
+	char	*temp;
+
+	while (env)
+	{
+		ft_arradd(&envp, ((t_var*)env->content)->key);	
+		env = env->next;
+	}
+	// ft_putarr(envp);
+	// ft_arrsort(&envp);
+	// ft_putarr(envp);
+
+	// ft_putstr_fd("declare -x ", 1);
+	// ft_putstr_fd("\"", 1);
+	// ft_putstr_fd("\"", 1);
 }
 
 char	*get_var(t_list *env, char *str)

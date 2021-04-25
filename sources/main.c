@@ -9,7 +9,6 @@ int		main(int argc, char *argv[], char *envp[])
 	t_hist	hist;
 
 	env = envp_to_lst(envp);
-	print_export(env);
 	
 	hist.size = read_file("minishell_history", &(hist.cmds));
 	hist.pos = hist.size;

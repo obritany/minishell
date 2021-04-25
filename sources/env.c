@@ -15,21 +15,24 @@ void	print_env(t_list *env)
 void	print_export(t_list *env)
 {
 	char	**envp;
-	char	*line;
-	char	*temp;
+	t_list	*temp;
+	int		i;
 
-	while (env)
+	envp = 0;
+	temp = env;
+	while (temp)
 	{
-		ft_arradd(&envp, ((t_var*)env->content)->key);	
-		env = env->next;
+		ft_arradd(&envp, ((t_var*)temp->content)->key);	
+		temp = temp->next;
 	}
-	// ft_putarr(envp);
-	// ft_arrsort(&envp);
-	// ft_putarr(envp);
-
-	// ft_putstr_fd("declare -x ", 1);
-	// ft_putstr_fd("\"", 1);
-	// ft_putstr_fd("\"", 1);
+	ft_arrsort(&envp);
+	i = 0;
+	while (envp[i])
+	{
+		printf("declare -x %s=\"%s\"\n", envp[i], get_var(env, envp[i]));
+		i++;
+	}
+	ft_arrclear(envp);
 }
 
 char	*get_var(t_list *env, char *str)

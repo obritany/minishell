@@ -30,3 +30,38 @@ void	test_env(t_list **env)
 	printf("%s\n", get_var(*env, "c"));
 	printf("\n");
 }
+
+void	test_fork()
+{
+	extern char	**environ;
+	int id = fork();
+	int i;
+	
+	if (!id)
+	{
+		printf("id - %d, pid - %d, ppid - %d\n", id, getpid(), getppid());
+		
+		i = 0;
+		while(i < 5)
+		{
+			printf("%d ", i++);
+			fflush(stdout);
+		}
+		execve("a.out", 0, environ);
+	}
+	else
+	{
+		printf("id - %d, pid - %d, ppid - %d\n", id, getpid(), getppid());
+		int *rslt = malloc(sizeof(int));
+		wait(rslt);
+		printf("rslt = %d\n", *rslt);
+
+		i = 5;
+		while(i < 10)
+		{
+			printf("%d ", i++);
+			fflush(stdout);
+		}
+	}
+	printf("Fork test done!\n");
+}

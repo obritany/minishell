@@ -2,15 +2,14 @@
 NAME		= minishell
 CC			= gcc
 # CFLAGS		= -Wall -Wextra -Werror
-# CFLAGS		= -fsanitize=address
-CFLAGS		=
+CFLAGS		= -fsanitize=address
 RM			= rm -f
 
 #FILES
 FLS			= main.c\
 			env.c\
 			history.c\
-			test.c
+			tests.c
 
 SRCS_DIR	= sources/
 HEADER		= $(SRCS_DIR)minishell.h
@@ -24,23 +23,35 @@ LIBFT		= $(LIBFT_DIR)libft.a
 all:		tools $(NAME)
 
 $(NAME):	$(LIBFT) $(OBJS)
-			$(CC) $(CFLAGS) -ltermcap $(LIBFT) $(OBJS) -o $(NAME)
-			@echo $(NAME) created!
+			@$(CC) $(CFLAGS) -ltermcap $(LIBFT) $(OBJS) -o $(NAME)
+			@echo "$(GREEN)$(NAME) created!$(DEFAULT)"
 
 $(OBJS):	$(HEADER)
 
 tools:
-			$(MAKE) -C $(LIBFT_DIR)
+			@$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-			$(RM) $(OBJS)
-			$(MAKE) -C $(LIBFT_DIR) clean
-			@echo $(NAME) cleaned!
+			@$(RM) $(OBJS)
+			@$(MAKE) -C $(LIBFT_DIR) clean
+			@echo "$(YELLOW)$(NAME) cleaned!$(DEFAULT)"
 
 fclean:		clean
-			$(RM) $(NAME)
-			$(RM) $(LIBFT)
+			@$(RM) $(NAME)
+			@$(RM) $(LIBFT)
+			@echo "$(RED)$(NAME) $(LIBFT) deleted!$(DEFAULT)"
 
 re:			fclean all
+
+#EXTRA
+leaks:
+			@valgrind --show-leak-kinds=definite --leak-check=full ./$(NAME)
+
+RED = \033[1;31m
+GREEN = \033[1;32m
+YELLOW = \033[1;33m
+CYAN = \033[1;36m
+WHITE = \033[1;37m
+DEFAULT = \033[0m
 
 .PHONY:		all clean fclean re

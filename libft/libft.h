@@ -84,6 +84,7 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 # endif
 
 int				get_next_line(int fd, char **line);
+int				get_lines(int fd, char ***arr);
 int				ft_putarr(char **arr);
 int				ft_arrclear(char **arr);
 char			**ft_arrdup(char **arr);

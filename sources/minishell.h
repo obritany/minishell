@@ -37,5 +37,6 @@ int		add_hist(t_hist *hist, char *str);
 //DEBUG
 void	test_env(t_list **env);
 void	test_fork();
+void	test_pipe();
 
 #endif

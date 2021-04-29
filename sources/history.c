@@ -1,23 +1,5 @@
 #include "minishell.h"
 
-int		get_lines(int fd, char ***arr)
-{
-	int 	i;
-	char	*line;
-
-	i = 0;
-	while (get_next_line(fd, &line))
-	{
-		ft_arradd(arr, line);
-		free(line);
-		i++;
-	}
-	ft_arradd(arr, line);
-	free(line);
-	i++;
-	return (i);
-}
-
 int		read_file(char *file, char ***arr)
 {
 	int		fd;

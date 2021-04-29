@@ -74,7 +74,8 @@ SRCS	=\
 		ft_lstadd_at.c\
 		ft_lst_at.c\
 		ft_arradd.c\
-		ft_arrsort.c
+		ft_arrsort.c\
+		get_lines.c
 
 OBJS	= $(SRCS:.c=.o)
 

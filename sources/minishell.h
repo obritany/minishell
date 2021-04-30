@@ -8,6 +8,7 @@
 # include <string.h>
 # include <errno.h>
 # include <unistd.h>
+# include <signal.h>
 
 typedef struct s_var
 {
@@ -38,5 +39,7 @@ int		add_hist(t_hist *hist, char *str);
 void	test_env(t_list **env);
 void	test_fork();
 void	test_pipe();
+void	test_dup();
+void	test_signal();
 
 #endif

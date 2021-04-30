@@ -31,6 +31,7 @@ void	test_env(t_list **env)
 	printf("\n");
 }
 
+
 void	test_fork()
 {
 	extern char	**environ;
@@ -69,6 +70,7 @@ void	test_fork()
 	printf("Fork test done!\n");
 }
 
+
 void	test_pipe()
 {
 	int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -100,6 +102,7 @@ void	test_pipe()
 
 	if (!id)
 	{
+		// Child thread
 		close(fd[0]);	// close readable fd because only write here
 		printf("Writing start \n");
 		write(fd[1], &sum, sizeof(int));
@@ -108,6 +111,7 @@ void	test_pipe()
 	}
 	else
 	{
+		// Parent thread
 		close(fd[1]);	// close writable fd because only write here
 		int sumFromChild;
 		printf("Reading start \n");
@@ -118,5 +122,64 @@ void	test_pipe()
 		int totalSum = sum + sumFromChild;
 		printf("Total sum in id %d = %d\n", id, totalSum);
 		wait(0);	// always wait child before exit
+	}
+}
+
+
+void	test_dup()
+{
+	int file = open("redirect", O_CREAT | O_RDWR, S_IRWXU);
+
+	printf("You CAN see it in STDOUT\n");
+
+	int stddup = dup(1);			// makes a copy of STDOUT fd
+	close(1);		// we don't use original fd, only a copy
+
+	int filedup = dup2(file, 1);	// filedup fd is a copy of file fd, and now replace STDOUT
+	close(file);	// we don't use original fd, only a copy
+
+	printf("You CAN'T see it in STDOUT\n");
+	close(filedup);	// close fd after print done
+
+	int stddup2 = dup2(stddup, 1);	// return STDOUT
+	close(stddup);	// we don't use original fd, only a copy
+
+	printf("You CAN see it in STDOUT\n");
+}
+
+
+int x = 0;	// use global varible for status check
+void	handle_sigusr1(int sig)
+{
+	if (x != 0)
+		return ;
+	printf("You can make it...\n");
+	fflush(stdout);		// immediate write
+}
+void	test_signal()
+{
+	int pid = fork();
+
+	if (pid == 0)
+	{
+		// Child thread
+		sleep(3);
+		kill(getppid(), SIGUSR1);	// send user signal to parent id
+	}
+	else
+	{
+		// Parent thread
+		signal(SIGUSR1, &handle_sigusr1);	// attach handle function to signal
+		
+		printf("What is the result of 2 * 5?\n");
+		scanf("%d", &x);
+		kill(pid, SIGKILL);	// kill hint thread if got answer
+
+		if (x == 10)
+			printf("Right!\n");
+		else
+			printf("Wrong!\n");
+
+		wait(0);
 	}
 }

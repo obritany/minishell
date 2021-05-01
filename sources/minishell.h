@@ -18,6 +18,7 @@ typedef struct s_var
 
 typedef struct s_hist
 {
+	char	*file;
 	int		size;
 	int		pos;
 	char	**cmds;

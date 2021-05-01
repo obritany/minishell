@@ -2,8 +2,15 @@
 
 void	test_env(t_list **env)
 {
+	printf("\n");
+
+	set_var(env, "__________A", ft_lstsize(*env) - 1);
+	set_var(env, "__________B=", ft_lstsize(*env) - 1);
+	set_var(env, "__________C=C", ft_lstsize(*env) - 1);
+
 	print_env(*env);
 	printf("\n");
+	print_export(*env);
 
 	set_var(env, "a=a a a", ft_lstsize(*env) - 1);
 	print_env(*env);
@@ -128,9 +135,20 @@ void	test_pipe()
 
 void	test_dup()
 {
+	int id = fork();
+
+	if (id != 0)
+	{
+		// Parent thread
+		wait(0);
+		printf("You CAN see PARENT it in STDOUT\n");
+		return ;
+	}
+
+	// Child thread
 	int file = open("redirect", O_CREAT | O_RDWR, S_IRWXU);
 
-	printf("You CAN see it in STDOUT\n");
+	printf("You CAN see CHILD it in STDOUT\n");
 
 	int stddup = dup(1);			// makes a copy of STDOUT fd
 	close(1);		// we don't use original fd, only a copy
@@ -138,13 +156,13 @@ void	test_dup()
 	int filedup = dup2(file, 1);	// filedup fd is a copy of file fd, and now replace STDOUT
 	close(file);	// we don't use original fd, only a copy
 
-	printf("You CAN'T see it in STDOUT\n");
+	printf("You CAN'T see CHILD it in STDOUT\n");
 	close(filedup);	// close fd after print done
 
-	int stddup2 = dup2(stddup, 1);	// return STDOUT
+	int stddup2 = dup2(stddup, 1);	// return STDOUT in child thread, in parent thread STDOUT didn't change at all
 	close(stddup);	// we don't use original fd, only a copy
 
-	printf("You CAN see it in STDOUT\n");
+	printf("You CAN see CHILD it in STDOUT\n");
 }
 
 
@@ -173,7 +191,7 @@ void	test_signal()
 		
 		printf("What is the result of 2 * 5?\n");
 		scanf("%d", &x);
-		kill(pid, SIGKILL);	// kill hint thread if got answer
+		kill(pid, SIGKILL);	// kill child thread if got answer
 
 		if (x == 10)
 			printf("Right!\n");

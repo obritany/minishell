@@ -2,13 +2,14 @@
 NAME		= minishell
 CC			= gcc
 # CFLAGS		= -Wall -Wextra -Werror
-CFLAGS		= -fsanitize=address
-# CFLAGS		= 
+# CFLAGS		= -fsanitize=address
+CFLAGS		= 
 RM			= rm -f
 
 #FILES
 FLS			= main.c\
 			env.c\
+			env_printer.c\
 			history.c\
 			tests.c
 

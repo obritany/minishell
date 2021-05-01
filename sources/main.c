@@ -9,8 +9,15 @@ int		main(int argc, char *argv[], char *envp[])
 	t_hist	hist;
 
 	env = envp_to_lst(envp);
+	if (env == 0)
+		return (1);
+
+	test_env(&env);
 	
-	hist.size = read_file("minishell_history", &(hist.cmds));
+	hist.file = ft_strdup("minishell_history");
+	if (hist.file == 0)
+		return (2);
+	hist.size = read_file(hist.file, &(hist.cmds));
 	hist.pos = hist.size;
 
 	tcgetattr(0,&term);

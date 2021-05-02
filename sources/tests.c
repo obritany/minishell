@@ -201,3 +201,47 @@ void	test_signal()
 		wait(0);
 	}
 }
+
+
+
+void	ft_exe_pipe(char *file, char *argv[], int fdin[], int fdout[])
+{
+	int pid = fork();
+	if (pid == 0)
+	{
+		// Child thread
+		if (fdout != 0)
+			dup2(fdout[WR], STDOUT);
+		if (fdin != 0)
+			dup2(fdin[RD], STDIN);
+		execve(file, argv, 0);
+	}
+	// Parent thread
+	if (fdout != 0)
+		close(fdout[WR]);
+	if (fdin != 0)
+		close(fdin[RD]);
+	wait(0);
+}
+void	test_exe_pipe()
+{
+	int fds[2][2];
+
+	pipe(fds[0]);
+
+	char *argv1[] = {"ls", "-l", 0};
+	ft_exe_pipe("/bin/ls", argv1, 0, fds[0]);
+
+	pipe(fds[1]);
+
+	char *argv2[] = {"grep", "env", 0};
+	ft_exe_pipe("/usr/bin/grep", argv2, fds[0], fds[1]);
+
+	pipe(fds[0]);
+
+	char *argv3[] = {"grep", ".c", 0};
+	ft_exe_pipe("/usr/bin/grep", argv3, fds[1], fds[0]);
+
+	char *argv4[] = {"wc", 0};
+	ft_exe_pipe("/usr/bin/wc", argv4, fds[0], 0);
+}

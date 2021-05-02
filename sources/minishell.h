@@ -10,6 +10,11 @@
 # include <unistd.h>
 # include <signal.h>
 
+#define STDIN	0
+#define STDOUT	1
+#define RD	0
+#define WR	1
+
 typedef struct s_var
 {
 	char	*key;
@@ -23,6 +28,15 @@ typedef struct s_hist
 	int		pos;
 	char	**cmds;
 }				t_hist;
+
+typedef struct	s_pipeline
+{
+	int fdin[2];
+	int fdout[2];
+	int pids[100];
+	int pipenum;
+}				t_pipeline;
+
 
 t_list	*envp_to_lst(char *envp[]);
 void	print_env(t_list *env);
@@ -42,5 +56,6 @@ void	test_fork();
 void	test_pipe();
 void	test_dup();
 void	test_signal();
+void	test_exe_pipe();
 
 #endif

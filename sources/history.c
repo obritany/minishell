@@ -31,7 +31,20 @@ int		add_hist(t_hist *hist, char *str)
 		return (1);
 	hist->size++;
 	hist->pos++;
-	write_str(hist->file, "\n", O_APPEND);	//TODO: change first line write
 	write_str(hist->file, str, O_APPEND);
+	write_str(hist->file, "\n", O_APPEND);
+	return (0);
+}
+
+int		init_hist(t_hist *hist)
+{
+	hist->file = ft_strdup("minishell_history");
+	if (hist->file == 0)
+		return (1);
+	write_str(hist->file, "", O_APPEND);
+	hist->size = read_file(hist->file, &(hist->cmds)) - 1;
+	free(hist->cmds[hist->size]);
+	hist->cmds[hist->size] = 0;
+	hist->pos = hist->size;
 	return (0);
 }

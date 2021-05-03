@@ -211,10 +211,18 @@ void	ft_exe_pipe(char *file, char *argv[], int fdin[], int fdout[])
 	{
 		// Child thread
 		if (fdout != 0)
+		{
 			dup2(fdout[WR], STDOUT);
+			close(fdout[RD]);
+			close(fdout[WR]);
+		}
 		if (fdin != 0)
+		{
 			dup2(fdin[RD], STDIN);
-		execve(file, argv, 0);
+			close(fdin[RD]);
+			close(fdin[WR]);
+		}
+		exit(execve(file, argv, 0));
 	}
 	// Parent thread
 	if (fdout != 0)

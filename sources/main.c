@@ -5,20 +5,14 @@ int		main(int argc, char *argv[], char *envp[])
 	char	str[100];				// буфер для разных символов (1 - анг, 2 - рус, 3 - стрелочки)
 	int		len;
 	struct	termios term;
-	t_list	*env;
 	t_hist	hist;
+	t_list	*env;
 
 	env = envp_to_lst(envp);
 	if (env == 0)
 		return (1);
-
-	test_env(&env);
 	
-	hist.file = ft_strdup("minishell_history");
-	if (hist.file == 0)
-		return (2);
-	hist.size = read_file(hist.file, &(hist.cmds));
-	hist.pos = hist.size;
+	init_hist(&hist);
 
 	tcgetattr(0,&term);
 	term.c_lflag &= ~ECHO;			// отключаем вывод служебных символов

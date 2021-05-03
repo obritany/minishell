@@ -31,7 +31,7 @@ int		add_hist(t_hist *hist, char *str)
 		return (1);
 	hist->size++;
 	hist->pos++;
-	write_str(hist->file, "\n", O_APPEND);
+	write_str(hist->file, "\n", O_APPEND);	//TODO: change first line write
 	write_str(hist->file, str, O_APPEND);
 	return (0);
 }

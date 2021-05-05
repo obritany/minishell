@@ -12,6 +12,9 @@
 // char *files[] = {"/bin/ls", "/bin/ls", "/bin/ls", 0};
 // char *argv[100][100] = {{"ls", 0}, {"ls", 0}, {"ls", 0}, 0};
 
+// char *files[] = {"/bin/lss", "/usr/bin/wc", 0};
+// char *argv[100][100] = {{"ls", 0}, {"wc", 0}, 0};
+
 char *files[] = {"/bin/sleep", "/usr/bin/yes", "/usr/bin/head", "/usr/bin/wc", 0};
 char *argv[100][100] = {{"sleep", "2", 0}, {"yes", 0}, {"head", 0}, {"wc", 0}, 0};
 
@@ -22,6 +25,21 @@ char *argv[100][100] = {{"sleep", "2", 0}, {"yes", 0}, {"head", 0}, {"wc", 0}, 0
 // 0 1 - pipes = 1
 // 1 1 - pipes = 2,3,4,5
 // 1 0 - pipes = -1
+
+void pwd()
+{
+	char buffer[1024];
+	printf("%s\n", getwd(buffer));
+}
+
+void cat()
+{
+	char buffer[1024];
+	int n;
+
+	while ((n = read(STDIN, buffer, 1024)) > 0)
+		write(STDOUT, buffer, n);
+}
 
 int	execute_pipe(char *file, char *argv[], t_pipeline *pl)
 {
@@ -38,10 +56,15 @@ int	execute_pipe(char *file, char *argv[], t_pipeline *pl)
 		{
 			dup2(pl->fdout[WR], STDOUT);
 			close(pl->fdout[RD]);
+			// pwd();
 		}
 		if (pl->pipenum  > 1 || pl->pipenum  < 0)	// fdin != 0
+		{
 			dup2(pl->fdin[RD], STDIN);
+			// cat();
+		}
 		exit(execve(file, argv, 0));
+		// exit(0);
 	}
 	// Parent thread
 	if (pl->pipenum  > 0)						// fdout != 0
@@ -77,29 +100,3 @@ int		main()
 	}
 	return (0);
 }
-
-
-// static void  ft_execute()
-// {
-//     extern char **environ;
-
-// 	int rslt;
-//     if (!fork())
-//     {
-//         rslt = execve(files[0], argv[0], environ);
-//         if (errno)
-// 		{
-//             printf("%s:\n", strerror(errno));
-// 		}
-//         exit(rslt);
-//     }
-//     wait(&rslt);
-//     if (WIFEXITED(rslt))
-//         rslt = WEXITSTATUS(rslt);
-// }
-
-// int main()
-// {
-// 	ft_execute();
-// 	return (0);
-// }

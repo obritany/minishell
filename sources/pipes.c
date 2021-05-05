@@ -41,24 +41,24 @@ void cat()
 		write(STDOUT, buffer, n);
 }
 
-int	execute_pipe(char *file, char *argv[], t_pipeline *pl)
+int	execute_pipe(char *file, char *argv[], t_pl *pl)
 {
 	pl->fdin[RD] = pl->fdout[RD];
 	pl->fdin[WR] = pl->fdout[WR];
-	if (pl->pipenum > 0)
+	if (pl->pnum > 0)
 		pipe(pl->fdout);
 
 	int pid = fork();
 	if (pid == 0)
 	{
 		// Child thread
-		if (pl->pipenum  > 0)						// fdout != 0
+		if (pl->pnum  > 0)						// fdout != 0
 		{
 			dup2(pl->fdout[WR], STDOUT);
 			close(pl->fdout[RD]);
 			// pwd();
 		}
-		if (pl->pipenum  > 1 || pl->pipenum  < 0)	// fdin != 0
+		if (pl->pnum  > 1 || pl->pnum  < 0)	// fdin != 0
 		{
 			dup2(pl->fdin[RD], STDIN);
 			// cat();
@@ -67,25 +67,25 @@ int	execute_pipe(char *file, char *argv[], t_pipeline *pl)
 		// exit(0);
 	}
 	// Parent thread
-	if (pl->pipenum  > 0)						// fdout != 0
+	if (pl->pnum  > 0)						// fdout != 0
 		close(pl->fdout[WR]);
-	if (pl->pipenum  > 1 || pl->pipenum  < 0)	// fdin != 0
+	if (pl->pnum  > 1 || pl->pnum  < 0)	// fdin != 0
 		close(pl->fdin[RD]);
 	return (pid);
 }
 
 int		main()
 {
-	t_pipeline pl;
+	t_pl pl;
 	int ret;
 
-	pl.pipenum = 0;
+	pl.pnum = 0;
 	int i = 0;
 	while (files[i])
 	{
-		pl.pipenum++;
+		pl.pnum++;
 		if (files[i + 1] == 0)
-			pl.pipenum = -1;		// last command
+			pl.pnum = -1;		// last command
 		pl.pids[i] = execute_pipe(files[i], argv[i], &pl);
 		i++;
 	}

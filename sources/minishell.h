@@ -29,13 +29,13 @@ typedef struct s_hist
 	char	**cmds;
 }				t_hist;
 
-typedef struct	s_pipeline
+typedef struct	s_pl
 {
 	int fdin[2];
 	int fdout[2];
 	int pids[100];
-	int pipenum;
-}				t_pipeline;
+	int pnum;
+}				t_pl;
 
 
 t_list	*envp_to_lst(char *envp[]);

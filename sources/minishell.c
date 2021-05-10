@@ -33,7 +33,6 @@ static void	ft_input(t_data *data)
 	{	
 		ft_set_term(1);
 		len = read(0, str, 3);
-		signal(SIGINT, &sig_handler);
 		if (g_sig == 1)
 			ft_line_handler(data, str, len, 3);
 		if (str[0] == '\e' || !ft_strncmp(str, "\177", len))

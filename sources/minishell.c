@@ -70,8 +70,8 @@ int	main(int argc, char **argv, char *envp[])
 	data->flg.n = 0;
 	g_sig = 0;
 	ft_shell_prompt();
-	signal(SIGQUIT, &sig_handler);
-	signal(SIGINT, &sig_handler);
+	signal(SIGQUIT, sig_handler);
+	signal(SIGINT, sig_handler);
 	ft_input(data);
 	return (0);
 }

@@ -2,8 +2,10 @@
 
 void	ft_execute(t_data *data, char *file)
 {
-	signal(SIGINT, &child_sig_handler);
-	signal(SIGQUIT, &child_sig_handler);
+	if (!(strncmp(data->argv[0], "./minishell", 11)))
+		g_sig = 2;
+	signal(SIGINT, child_sig_handler);
+	signal(SIGQUIT, child_sig_handler);
 	if (!fork())
 	{
 		if (data->fd0 != STDIN)
@@ -18,8 +20,10 @@ void	ft_execute(t_data *data, char *file)
 		}
 	}
 	wait(&data->ret);
-	signal(SIGQUIT, &sig_handler);
-	signal(SIGINT, &sig_handler);
+	if (g_sig == 2)
+		g_sig = 0;
+	signal(SIGQUIT, sig_handler);
+	signal(SIGINT, sig_handler);
 	if (WIFEXITED(data->ret))
 		data->ret = WEXITSTATUS(data->ret);
 	free(file);

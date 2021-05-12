@@ -2,10 +2,13 @@
 
 void	child_sig_handler(int sig)
 {
-	if (sig == SIGINT)
-		write(2, "\n", 1);
-	if (sig == SIGQUIT)
-		write(2, "Quit: 3\n", 8);
+	if (g_sig != 2)
+	{
+		if (sig == SIGINT)
+			write(2, "\n", 1);
+		if (sig == SIGQUIT)
+			write(2, "Quit: 3\n", 8);
+	}
 }
 
 void	sig_handler(int sig)

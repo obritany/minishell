@@ -6,6 +6,8 @@ void	ft_pwd(t_data *data)
 	char	*pwd;
 
 	pwd = getcwd(buf, 4096);
+	if (pwd == NULL)
+		pwd = get_var(data->env, "PWD");
 	write(data->fd1, pwd, ft_strlen(pwd));
 	write(data->fd1, "\n", 1);
 }
@@ -37,29 +39,40 @@ void	ft_echo(t_data *data, int i, int n)
 		write(data->fd1, "\n", 1);
 }
 
+static void	ft_messages(t_data *data, int type)
+{
+	if (type == 1)
+	{
+		printf("exit\nbash: exit: ");
+		printf("%s: numeric argument required\n", data->argv[1]);
+		exit(255);
+	}
+	if (type == 2)
+	{
+		data->ret = 1;
+		printf("exit\nbash: exit: too many arguments\n");
+		return ;
+	}
+}
+
 void	ft_exit(t_data *data, int i)
 {
 	if (data->argc > 1)
 	{
 		while (data->argv[1][++i])
 		{
-			if (!(ft_isdigit(data->argv[1][i])))
-			{
-				printf("exit\nbash: exit: ");
-				printf("%s: numeric argument required\n", data->argv[1]);
-				exit(255);
-			}
+			if (!(ft_isdigit(data->argv[1][i])) && data->argv[1][i] != '-')
+				ft_messages(data, 1);
 		}
 		if (data->argc > 2)
-		{
-			data->ret = 1;
-			printf("exit\nbash: exit: too many arguments\n");
-			return ;
-		}
+			ft_messages(data, 2);
 		else
 		{
 			printf("exit\n");
-			exit(ft_atoi(data->argv[1]));
+			if (data->argv[1] < 0)
+				exit(256 - ft_atoi(data->argv[1]));
+			else
+				exit(ft_atoi(data->argv[1]));
 		}
 	}
 	else

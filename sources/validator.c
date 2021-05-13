@@ -53,7 +53,7 @@ static void	ft_validate_dups(t_data *data, int i)
 	while (data->line[++i])
 	{
 		ft_flags(data, data->line[i], 2);
-		if ((!data->flg.esc && (data->line[i] == ';' || data->line[i] == '|') \
+		if ((!data->flg.esc && !data->flg.squote && (data->line[i] == ';' || data->line[i] == '|') \
 		&& data->line[i + 1] == data->line[i]) || (data->line[i] == '>' && data->\
 		line[i + 1] == data->line[i] && data->line[i + 2] == data->line[i]))
 		{
